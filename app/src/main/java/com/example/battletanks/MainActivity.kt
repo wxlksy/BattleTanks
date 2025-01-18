@@ -9,16 +9,17 @@ import android.view.KeyEvent.KEYCODE_DPAD_UP
 import android.view.KeyEvent.KEYCODE_DPAD_RIGHT
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.*
 import android.widget.FrameLayout
-import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginTop
-import com.example.battletanks.Direction.UP
-import com.example.battletanks.Direction.DOWN
-import com.example.battletanks.Direction.LEFT
-import com.example.battletanks.Direction.RIGHT
+import com.example.battletanks.enums.Direction.UP
+import com.example.battletanks.enums.Direction.DOWN
+import com.example.battletanks.enums.Direction.LEFT
+import com.example.battletanks.enums.Direction.RIGHT
 import com.example.battletanks.databinding.ActivityMainBinding
-import com.example.battletanks.GridDrawer
+import com.example.battletanks.drawers.GridDrawer
+import com.example.battletanks.enums.Direction
 
 const val CELL_SIZE = 50
 
@@ -26,6 +27,7 @@ lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity()
 {
+    private var editMode = false
     private val gridDrawer by lazy {
         GridDrawer(this)
     }
@@ -37,6 +39,23 @@ class MainActivity : AppCompatActivity()
         setContentView(binding.root)
 
         supportActionBar?.title = "Menu"
+    }
+
+    private fun switchEditMode()
+    {
+        if (editMode)
+        {
+            gridDrawer.removeGrid()
+            binding.materialContainer.visibility=INVISIBLE
+        }
+
+        else
+        {
+            gridDrawer.drawGrid()
+            binding.materialContainer.visibility=VISIBLE
+
+        }
+        editMode = !editMode
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean
@@ -51,6 +70,7 @@ class MainActivity : AppCompatActivity()
         {
             R.id.menu_settings ->
             {
+                switchEditMode()
                 gridDrawer.drawGrid()
                 return true
             }
